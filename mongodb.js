@@ -1,28 +1,21 @@
-const { MongoClient, ObjectID } = require("mongodb");
+// THIS FILE CONNECT DATABASE AND WAS DELETED BY INSTRUCTOR....
 
-const connectionURL = "mongodb://127.0.0.1:27017";
-const databaseName = "task-manager";
+// const { MongoClient, ObjectID } = require("mongodb");
 
-MongoClient.connect(
-  connectionURL,
-  { useNewUrlParser: true },
-  (error, client) => {
-    if (error) {
-      return console.log("Unable o connect to databes!");
-    }
+// const connectionURL = "mongodb://127.0.0.1:27017";
+// const databaseName = "task-manager";
 
-    const db = client.db(databaseName);
+// MongoClient.connect(
+//   connectionURL,
+//   { useNewUrlParser: true },
+//   (error, client) => {
+//     if (error) {
+//       return console.log("Unable o connect to databes!");
+//     }
 
-
-    
-
-
-
-
-
-    
-  }
-);
+//     const db = client.db(databaseName);    
+//   }
+// );
 
 
 
