@@ -1,97 +1,33 @@
 const express = require("express");
 require("../src/db/mongoose");
-const User = require("./db/models/user");
-const Task = require("./db/models/task");
+// const User = require("./models/user");
+// const Task = require("./models/task");
+const userRouter = require("./routers/user");
+const taskRouter = require("./routers/task");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// ROUTES
+app.use(userRouter);
+app.use(taskRouter);
 
-// TASKS ************************************************
-// CREATE A NEW USER
-app.post("/users", (req, res) => {
-  const user = new User(req.body);
-
-  user
-    .save()
-    .then(() => {
-      res.status(201).send(user);
-    })
-    .catch(e => {
-      res.status(400).send(e);
-    });
-});
-
-// READ ALL USERS
-app.get("/users", (req, res) => {
-  User.find({})
-    .then(users => {
-      res.status(201).send(users);
-    })
-    .catch(e => {
-      res.status(500).send(e);
-    });
-});
-
-// READ USER BY ID
-app.get("/users/:id", (req, res) => {
-  const _id = req.params.id;
-
-  User.findById(_id)
-    .then(user => {
-      if (!user) {
-        return res.status(404).send();
-      }
-      res.send(user);
-    })
-    .catch(e => {
-      res.status(500).send(e);
-    });
-});
-
-// TASKS ************************************************
-// CREATE A NEW TASK
-app.post("/tasks", (req, res) => {
-  const task = new Task(req.body);
-
-  task
-    .save()
-    .then(() => {
-      res.status(201).send(task);
-    })
-    .catch(e => {
-      res.status(400).send(e);
-    });
-});
-
-// READ ALL TASKS
-app.get("/tasks", (req, res) => {
-  Task.find({})
-    .then(tasks => {
-      res.status(201).send(tasks);
-    })
-    .catch(e => {
-      res.status(500).send(e);
-    });
-});
-
-// READ TASK BY ID
-app.get("/tasks/:id", (req, res) => {
-  const _id = req.params.id;
-
-  Task.findById(_id)
-    .then(task => {
-      if (!task) {
-        return res.status(404).send();
-      }
-      res.send(task);
-    })
-    .catch(e => {
-      res.status(500).send(e);
-    });
-});
-
+// SERVER LISTEN TO PORT
 app.listen(port, () => console.log("Server is on port " + port));
+
+const bcrypt =  require('bcryptjs')
+
+const myFunction = async () => {
+  const password = 'Red12345'
+  const hashedPassword = await bcrypt.hash(password, 8)
+  
+
+  console.log(password)
+  console.log(hashedPassword)
+
+  const isMatch = await bcrypt.compare('Red12345!', hashedPassword)
+  console.log(isMatch)
+}
+
+myFunction()
