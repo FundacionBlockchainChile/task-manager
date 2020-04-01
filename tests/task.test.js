@@ -49,18 +49,6 @@ test("Attempt to have second user delete first task (should fail)", async () => 
 });
 
 // Task Test Ideas
-//
-// Should not create task with invalid description/completed
-// Should not update task with invalid description/completed
-// Should delete user task
-// Should not delete task if unauthenticated
-// Should not update other users task
-// Should fetch user task by id
-// Should not fetch user task by id if unauthenticated
-// Should not fetch other users task by id
-// Should fetch only completed tasks
-// Should fetch only incomplete tasks
-// Should sort tasks by description/completed/createdAt/updatedAt
 // Should fetch page of tasks
 
 test("Should not create task with invalid description", async () => {
@@ -102,7 +90,7 @@ test("Should delete user task", async () => {
 
   const task = await Task.findById(taskOne._id);
   // expect(task).not.toBe(null);
-  expect(task).toBe(null)
+  expect(task).toBe(null);
   // console.log(response.body)
 });
 
@@ -115,11 +103,11 @@ test("Should not delete task if unauthenticated", async () => {
 
   const task = await Task.findById(taskOne._id);
   // expect(task).not.toBe(null);
-  expect(task).not.toBe(null)
+  expect(task).not.toBe(null);
   // console.log(response.body)
 });
 
-test('Should not update other users task', async () => {
+test("Should not update other users task", async () => {
   const response = await request(app)
     .delete(`/tasks/${taskOne._id}`)
     .set("AUthorization", `Bearer ${userTwo.tokens[0].token}`)
@@ -128,19 +116,81 @@ test('Should not update other users task', async () => {
 
   const task = await Task.findById(taskOne._id);
   // expect(task).not.toBe(null);
-  expect(task).not.toBe(null)
+  expect(task).not.toBe(null);
   // console.log(response.body)
-})
+});
 
-test('Should fetch user task by id', async () => {
+test("Should fetch user task by id", async () => {
   const response = await request(app)
     .get(`/tasks/${taskOne._id}`)
     .set("AUthorization", `Bearer ${userOne.tokens[0].token}`)
     .send()
     .expect(200);
   expect(response.body).not.toBe(null);
-  console.log(response.body)
+  // console.log(response.body)
+});
+
+test("Should not fetch user task by id if unauthenticated", async () => {
+  const response = await request(app)
+    .get(`/tasks/${taskOne._id}`)
+    // .set("AUthorization", `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(401);
+  expect(response.body).not.toBe(null);
+  // console.log(response.body)
+});
+
+test("Should not fetch other users task by id", async () => {
+  const response = await request(app)
+    .get(`/tasks/${taskOne._id}`)
+    .set("AUthorization", `Bearer ${userTwo.tokens[0].token}`)
+    .send()
+    .expect(404);
+  // expect(response.body).not.toBe(null);
+  // console.log(respons.body)
+});
+
+test("Should fetch only completed tasks", async () => {
+  const response = await request(app)
+    .get(`/tasks?completed=true`)
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200);
+  // console.log(response.body);
+});
+
+test('Should fetch only incomplete tasks', async () => {
+  const response = await request(app)
+    .get(`/tasks?completed=false`)
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200);
+  // console.log(response.body);
 })
 
+test('Should sort tasks by description descenden way', async () => {
+  const response = await request(app)
+  .get('/tasks?sortBy=createdAt:desc')
+  .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+  .send()
+  .expect(200);
+  // console.log(response.body);
+})
 
+test('Should sort tasks by description descenden way', async () => {
+  const response = await request(app)
+  .get('/tasks?sortBy=createdAt:asc')
+  .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+  .send()
+  .expect(200);
+  // console.log(response.body);
+})
 
+test('Should fetch page of tasks', async () => {
+  const response = await request(app)
+  .get('/tasks')
+  .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+  .send()
+  .expect(200);
+  // console.log(response.body);
+})
